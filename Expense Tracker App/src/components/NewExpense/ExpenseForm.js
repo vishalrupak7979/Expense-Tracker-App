@@ -1,9 +1,16 @@
 import React,{useState} from "react";
 import './ExpenseForm.css';
+
+import Errormodule from "../UI/Errormodule";
 export default function ExpenseForm(props){
     const [oldTitle,setTitle]=useState(" ");
     const [oldamount,setAmount]=useState(" ");
     const [olddate,setdate]=useState(" ");
+    const [error,seterror]=useState();
+
+
+
+
     const titleChange = (event) => {
 
         setTitle(event.target.value);
@@ -21,6 +28,15 @@ export default function ExpenseForm(props){
     };
     const formSubmit=(event)=>{
           event.preventDefault();
+          if(oldTitle.trim().length===0)
+          {
+              seterror({
+                  title:'Invalid data',
+                  message:"Enter The Title",
+              });
+              return;
+          }
+          
 
           const result={
             title:oldTitle,
@@ -32,7 +48,12 @@ export default function ExpenseForm(props){
           setAmount('');
           setdate('');
     };
+    function cancelfun(){
+        seterror(null);
+    }
     return(
+        <div>
+        {error&&<Errormodule title={error.title} message={error.message} onconform={cancelfun}/>}
           <form onSubmit={formSubmit}>
             <div className="new-expense__controls">
                 <div className="new-expense__control">
@@ -54,5 +75,6 @@ export default function ExpenseForm(props){
             </div>
             
           </form>
+          </div>
     );
 }
